@@ -1,13 +1,21 @@
-// var http = require('http');
+var http = require('http');
 var url = require('url');
-var summer = ('http://localhost:8080/summer.html')
 var fs = require('fs');
 
-// http.createServer(function (req, res) {
-  var obj = url.parse(req.url);
-  console.log(obj.host);
-  console.log(obj.pathname);
-  console.log(obj.search);
-  // res.writeHead(200);
-  // res.end();
-// }).listen(8080);
+http.createServer(function (req, res) {
+  var obj = url.parse(req.url, true);
+  var file = "." + obj.pathname;
+  fs.readFile(file, function (err, data) {
+    console.log(file);
+    if (err){
+      res.writeHead(404, {'Content-Type': 'text/html'});
+      return res.end("404 Not Found");
+    }
+    else {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(data);
+      return res.end();
+    };
+
+  });
+}).listen(8080);
